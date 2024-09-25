@@ -1,3 +1,4 @@
+-- Coding Challenge - Car Rental System – SQL
 create database cardb;
 use cardb;
 create table Vehicle (
