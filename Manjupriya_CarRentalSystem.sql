@@ -168,7 +168,6 @@ JOIN Payment P ON L.leaseID = P.leaseID
 GROUP BY C.customerID
 ORDER BY TotalSpent DESC 
 LIMIT 1;
-
 -- 18. List All Cars with Their Current Lease Information.
 SELECT V.*, L.* 
 FROM Vehicle V
