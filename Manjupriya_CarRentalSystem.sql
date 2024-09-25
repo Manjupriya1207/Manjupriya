@@ -155,25 +155,30 @@ select L.leaseID ,V.*
 from Vehicle V
 join  Lease L on V.vehicleID = L.vehicleID;
 -- 16. Retrieve Details of Active Leases with Customer and Car Information.
-select * from Lease;
-SELECT L.*, C.*, V.* 
-FROM Lease L
-JOIN Customer C ON L.customerID = C.customerID
-JOIN Vehicle V ON L.vehicleID = V.vehicleID
-WHERE L.endDate > CURDATE();
+select L.leaseID, C.*, V.* from Lease L
+join Customer C on L.customerID = C.customerID
+join Vehicle V on L.vehicleID = V.vehicleID
+where L.endDate >= now();
 -- 17. Find the Customer Who Has Spent the Most on Leases.
-SELECT C.customerID, C.firstName, C.lastName, SUM(P.amount) AS TotalSpent 
-FROM Customer C
-JOIN Lease L ON C.customerID = L.customerID
-JOIN Payment P ON L.leaseID = P.leaseID
-GROUP BY C.customerID
-ORDER BY TotalSpent DESC 
-LIMIT 1;
+select C.customerID, C.firstName, C.lastName, SUM(P.amount) as TotalSpent
+from Customer C
+join Lease L ON C.customerID = L.customerID
+join Payment P ON L.leaseID = P.leaseID
+group by C.customerID
+having TotalSpent = (
+select MAX(totalSpent)
+from (select SUM(P.amount) as totalSpent
+from Customer C
+join Lease L ON C.customerID = L.customerID
+join Payment P ON L.leaseID = P.leaseID
+group by C.customerID
+) as Max_spend
+);
 -- 18. List All Cars with Their Current Lease Information.
-SELECT V.*, L.* 
-FROM Vehicle V
-LEFT JOIN Lease L ON V.vehicleID = L.vehicleID 
-WHERE L.endDate > CURDATE();
+select V.*, L.* 
+from Vehicle V
+left join Lease L on V.vehicleID = L.vehicleID 
+where L.endDate > CURDATE();
 
 
 
